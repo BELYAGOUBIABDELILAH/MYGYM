@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Gym Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">Espace Admin</a>
+        <div class="navbar-user">
+            <span id="user-email"></span>
+            <button id="logout-button" class="btn btn-secondary btn-icon" title="Déconnexion">
+                <i data-lucide="log-out"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Loader principal -->
+        <div id="main-loader" class="spinner-wrapper">
+            <div class="spinner"></div>
+            <p>Chargement des données...</p>
+        </div>
+        
+        <!-- Contenu principal (caché initialement) -->
+        <main id="main-content" class="hidden">
+            <!-- Section des statistiques -->
+            <div id="stats-section" style="margin-bottom: 2rem;">
+                <div id="stats-loader" class="spinner-wrapper">
+                    <div class="spinner"></div>
+                </div>
+                <div id="stats-grid" class="stat-grid hidden">
+                    <!-- Card Total Abonnés -->
+                    <div class="stat-card" style="--card-color: #3b82f6;">
+                        <div class="stat-card-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="stat-card-content">
+                            <h5 class="stat-card-title">Total Abonnés</h5>
+                            <p class="stat-card-number" id="total-abonnés-stat">0</p>
+                        </div>
+                    </div>
+                    <!-- Card Abonnés Actifs -->
+                    <div class="stat-card" style="--card-color: #10b981;">
+                        <div class="stat-card-icon">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <div class="stat-card-content">
+                            <h5 class="stat-card-title">Abonnés Actifs</h5>
+                            <p class="stat-card-number" id="actifs-stat">0</p>
+                        </div>
+                    </div>
+                    <!-- Card Abonnés Expirés -->
+                    <div class="stat-card" style="--card-color: #ef4444;">
+                        <div class="stat-card-icon">
+                            <i data-lucide="user-x"></i>
+                        </div>
+                        <div class="stat-card-content">
+                            <h5 class="stat-card-title">Expirés</h5>
+                            <p class="stat-card-number" id="expirés-stat">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-button active" data-target="#abonnés-tab-pane">
+                    <i data-lucide="users"></i> Abonnés
+                </button>
+                <button class="tab-button" data-target="#produits-tab-pane">
+                    <i data-lucide="shopping-basket"></i> Produits & Ventes
+                </button>
+                <button class="tab-button" data-target="#admins-tab-pane">
+                    <i data-lucide="shield"></i> Admins
+                </button>
+            </div>
+
+            <div class="tab-content">
+                <!-- Onglet Gestion des Abonnés -->
+                <div class="tab-pane active" id="abonnés-tab-pane">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Liste des Abonnés</h5>
+                            <button class="btn btn-primary" id="add-abonne-btn">
+                                <i data-lucide="plus-circle"></i> Ajouter un abonné
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <input type="text" id="search-abonne-input" class="form-control" placeholder="Rechercher un abonné par nom...">
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="styled-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Fin Abonnement</th>
+                                            <th>Paiement</th>
+                                            <th>Statut</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="abonnés-list">
+                                        <!-- Les lignes seront injectées par JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Onglet Produits & Ventes -->
+                <div class="tab-pane" id="produits-tab-pane">
+                    <div class="produits-grid">
+                        <!-- Colonne Gestion des Produits -->
+                        <div class="main-grid">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Gestion des Produits</h5>
+                                    <button class="btn btn-primary" id="add-produit-btn">
+                                        <i data-lucide="plus-circle"></i> Ajouter un produit
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-wrapper">
+                                        <table class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nom</th>
+                                                    <th>Prix</th>
+                                                    <th>Stock</th>
+                                                    <th class="text-end">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="produits-list">
+                                                <!-- Produits injectés par JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- Historique des ventes -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i data-lucide="receipt"></i> Historique des Ventes</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-wrapper">
+                                        <table class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Produit</th>
+                                                    <th>Qté</th>
+                                                    <th>Total</th>
+                                                    <th>Abonné</th>
+                                                    <th class="text-end">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ventes-list">
+                                                <!-- Ventes injectées par JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         <!-- Colonne Enregistrer une vente -->
+                        <div class="card">
+                           <div class="card-header">
+                               <h5><i data-lucide="shopping-cart"></i> Enregistrer une Vente</h5>
+                           </div>
+                           <div class="card-body">
+                                <form id="vente-form">
+                                   <div class="form-group">
+                                       <label for="vente-produit">Produit</label>
+                                       <select class="form-control" id="vente-produit" required></select>
+                                   </div>
+                                   <div class="form-group">
+                                       <label for="vente-quantite">Quantité</label>
+                                       <input type="number" class="form-control" id="vente-quantite" min="1" value="1" required>
+                                   </div>
+                                    <div class="form-group">
+                                       <label for="vente-abonne">Associer à un abonné (Optionnel)</label>
+                                       <select class="form-control" id="vente-abonne"></select>
+                                   </div>
+                                   <div style="text-align: right;">
+                                       <button type="submit" class="btn btn-primary">Enregistrer la vente</button>
+                                   </div>
+                               </form>
+                               <div id="vente-feedback"></div>
+                           </div>
+                       </div>
+                    </div>
+                </div>
+
+                <!-- Onglet Gestion des Admins -->
+                <div class="tab-pane" id="admins-tab-pane">
+                    <div class="main-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Ajouter un Administrateur</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="add-admin-form" class="add-admin-form">
+                                    <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
+                                        <label for="new-admin-email">Email</label>
+                                        <input type="email" class="form-control" id="new-admin-email" placeholder="email@exemple.com" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                                </form>
+                                <div id="add-admin-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Liste des Administrateurs</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul id="admin-list" class="list-group">
+                                    <!-- La liste des admins sera injectée par JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="produitModal" tabindex="-1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="produitModalLabel">Ajouter un Produit</h5>
+                <button type="button" class="btn-close" data-dismiss-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="produit-form">
+                    <input type="hidden" id="produit-id">
+                    <div class="form-group">
+                        <label for="produit-nom">Nom du produit</label>
+                        <input type="text" class="form-control" id="produit-nom" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="produit-prix">Prix Unitaire (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="produit-prix" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="produit-stock">Stock initial</label>
+                            <input type="number" class="form-control" id="produit-stock" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="produit-unite">Unité (ex: boîte, sachet, kg)</label>
+                        <input type="text" class="form-control" id="produit-unite" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss-modal>Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="abonneModal" tabindex="-1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="abonneModalLabel">Ajouter un Abonné</h5>
+                <button type="button" class="btn-close" data-dismiss-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="abonne-form">
+                    <input type="hidden" id="abonne-id">
+                    <div class="form-group">
+                        <label for="nom">Nom complet</label>
+                        <input type="text" class="form-control" id="nom" required>
+                    </div>
+                    <div class="form-row">
+                         <div class="form-group hidden">
+                            <label for="montant-total">Montant Total (DA)</label>
+                            <input type="number" class="form-control" id="montant-total" value="1500" readonly>
+                        </div>
+                         <div class="form-group">
+                            <label for="montant-initial">Paiement Initial (DA)</label>
+                            <input type="number" step="0.01" class="form-control" id="montant-initial" required>
+                            <small class="form-text">Le paiement initial ne peut pas dépasser le montant total de l'abonnement de 1500 DA.</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date-debut">Date de début</label>
+                            <input type="date" class="form-control" id="date-debut" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-fin">Date de fin</label>
+                            <input type="date" class="form-control" id="date-fin" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss-modal>Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="paymentHistoryModal" tabindex="-1">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentHistoryModalLabel">Historique des Paiements</h5>
+                <button type="button" class="btn-close" data-dismiss-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <h6>Ajouter un paiement</h6>
+                <form id="add-payment-form" class="form-row modal-form-row">
+                    <input type="hidden" id="payment-abonne-id">
+                    <div class="form-group">
+                        <label for="payment-amount">Montant (DA)</label>
+                        <input type="number" step="0.01" class="form-control" id="payment-amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment-comment">Commentaire</label>
+                        <input type="text" class="form-control" id="payment-comment" placeholder="Optionnel">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary w-100">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="contractsHistoryModal" tabindex="-1">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contractsHistoryModalLabel">Historique des Contrats</h5>
+                <button type="button" class="btn-close" data-dismiss-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Période</th>
+                                <th>Paiement</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contracts-history-list">
+                            <!-- Contenu injecté par JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmationModal" tabindex="-1">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-body" style="text-align: center; padding: 2rem;">
+                <div class="confirmation-icon" style="margin-bottom: 1rem;">
+                    <i data-lucide="alert-triangle" style="width: 48px; height: 48px; color: var(--warning-color);"></i>
+                </div>
+                <h5 class="modal-title" id="confirmationModalTitle" style="margin-bottom: 0.5rem; font-size: 1.2rem;">Confirmation requise</h5>
+                <p id="confirmationModalMessage" style="color: var(--text-light); margin-bottom: 1.5rem;">Êtes-vous sûr de vouloir continuer ?</p>
+                <div class="confirmation-buttons" style="display: flex; gap: 1rem; justify-content: center;">
+                    <button type="button" class="btn btn-secondary" data-dismiss-modal>Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmActionBtn">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Custom Notification Container -->
+    <div id="custom-notification-container" class="notification-container hidden">
+        <div class="notification-card">
+            <div class="notification-icon">
+                <i data-lucide="check-circle"></i>
+            </div>
+            <div class="notification-content">
+                <p class="notification-title">Succès</p>
+                <p class="notification-message">Message de test.</p>
+            </div>
+            <button class="notification-close-btn">&times;</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script>lucide.createIcons();</script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Protection de la page et initialisation du tableau de bord
+        setupDashboardPage();
+    </script>
+</body>
+</html>

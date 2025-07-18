@@ -1,0 +1,103 @@
+{
+  "database": {
+    "schema": {
+      "admins": {
+        "email": {
+          "type": "text"
+        },
+        "addedBy": {
+          "type": "text"
+        }
+      },
+      "abonnes": {
+        "nom": {
+          "type": "text"
+        },
+        "montantTotal": {
+          "type": "numeric"
+        },
+        "montantPaye": {
+          "type": "numeric"
+        },
+        "dateDebut": {
+          "type": "text"
+        },
+        "dateFin": {
+          "type": "text"
+        },
+        "presenceCount": {
+          "type": "integer",
+          "description": "DEPRECATED: Number of presence marks for a subscriber."
+        }
+      },
+      "paiements": {
+        "abonne_id": {
+          "type": "text"
+        },
+        "montant": {
+          "type": "numeric"
+        },
+        "date": {
+          "type": "timestamptz"
+        },
+        "methode": {
+          "type": "text"
+        },
+        "commentaire": {
+          "type": "text"
+        }
+      },
+      "presences": {
+        "abonne_id": {
+          "type": "text",
+          "description": "DEPRECATED: The ID of the subscriber."
+        },
+        "date": {
+          "type": "timestamptz",
+          "description": "DEPRECATED: The timestamp of the presence."
+        },
+        "commentaire": {
+          "type": "text",
+          "description": "DEPRECATED: An optional comment for the presence."
+        }
+      },
+      "produits": {
+        "nom": {
+          "type": "text"
+        },
+        "prix_unitaire": {
+          "type": "numeric"
+        },
+        "stock": {
+          "type": "integer"
+        },
+        "unite": {
+          "type": "text"
+        }
+      },
+      "ventes": {
+        "produit_id": {
+          "type": "text"
+        },
+        "nom_produit": {
+          "type": "text"
+        },
+        "quantite": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "numeric"
+        },
+        "abonne_id": {
+          "type": "text"
+        },
+        "nom_abonne": {
+          "type": "text"
+        },
+        "date_vente": {
+          "type": "timestamptz"
+        }
+      }
+    }
+  }
+}
