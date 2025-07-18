@@ -1,0 +1,141 @@
+{
+  "database": {
+    "schema": {
+      "admins": {
+        "email": {
+          "type": "text"
+        },
+        "addedBy": {
+          "type": "text"
+        },
+        "role": {
+          "type": "text",
+          "description": "User role, e.g., 'admin'."
+        }
+      },
+      "abonnes": {
+        "nom": {
+          "type": "text"
+        },
+        "montantTotal": {
+          "type": "numeric"
+        },
+        "montantPaye": {
+          "type": "numeric"
+        },
+        "dateDebut": {
+          "type": "text"
+        },
+        "dateFin": {
+          "type": "text"
+        },
+        "presenceCount": {
+          "type": "integer",
+          "description": "DEPRECATED: Number of presence marks for a subscriber."
+        },
+        "historiqueAbonnements": {
+            "type": "jsonb",
+            "description": "Array of subscription history objects."
+        }
+      },
+      "paiements": {
+        "abonne_id": {
+          "type": "text"
+        },
+        "montant": {
+          "type": "numeric"
+        },
+        "date": {
+          "type": "timestamptz"
+        },
+        "methode": {
+          "type": "text"
+        },
+        "commentaire": {
+          "type": "text"
+        }
+      },
+      "presences": {
+        "abonne_id": {
+          "type": "text",
+          "description": "DEPRECATED: The ID of the subscriber."
+        },
+        "date": {
+          "type": "timestamptz",
+          "description": "DEPRECATED: The timestamp of the presence."
+        },
+        "commentaire": {
+          "type": "text",
+          "description": "DEPRECATED: An optional comment for the presence."
+        }
+      },
+      "produits": {
+        "nom": {
+          "type": "text"
+        },
+        "prix_unitaire": {
+          "type": "numeric"
+        },
+        "stock": {
+          "type": "integer"
+        },
+        "unite": {
+          "type": "text"
+        }
+      },
+      "ventes": {
+        "produit_id": {
+          "type": "text"
+        },
+        "nom_produit": {
+          "type": "text"
+        },
+        "quantite": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "numeric"
+        },
+        "abonne_id": {
+          "type": "text"
+        },
+        "nom_abonne": {
+          "type": "text"
+        },
+        "date_vente": {
+          "type": "timestamptz"
+        }
+      },
+      "contrats": {
+        "abonne_id": {
+          "type": "text",
+          "description": "ID of the subscriber"
+        },
+        "nom_abonne": {
+          "type": "text",
+          "description": "Name of the subscriber for convenience"
+        },
+        "dateDebut": {
+          "type": "timestamptz",
+          "description": "Contract start date"
+        },
+        "dateFin": {
+          "type": "timestamptz",
+          "description": "Contract end date"
+        },
+        "montantTotal": {
+          "type": "numeric",
+          "description": "Total amount for this contract period"
+        },
+        "paiementInitial": {
+          "type": "numeric",
+          "description": "Initial payment made for this contract"
+        },
+        "montantPayeContrat": {
+          "type": "numeric",
+          "description": "Total amount paid for this specific contract period"
+        }
+      }
+    }
+  }
+}
